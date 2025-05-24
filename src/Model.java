@@ -1,4 +1,6 @@
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -14,6 +16,10 @@ public class Model {
     private int pc_number; // arvuti võetud number
     private int steps; // Käikude lugeja
     private boolean game_over; // Kas mäng on läbi (yes or no)
+    public String datetime; // Mänguaeg
+    private boolean cheater; // Kas mängija on petis jah või ei
+
+
 
     /**
      * UUe mängu loomine
@@ -22,6 +28,7 @@ public class Model {
         pc_number = new Random().nextInt(MAXIMUM - MINIMUM + 1) + MINIMUM;
         game_over = false;
         steps = 0;
+        cheater = false;
     }
 
 
@@ -46,6 +53,14 @@ public class Model {
     }
 
     /**
+     * Kas mängija on pettur?
+     * @return true on pettur, false ei ole
+     */
+    public boolean isCheater() {
+        return cheater;
+    }
+
+    /**
      * Kontrollib kasutaja sisestust ja tagastab sobiva teksti
      * @param guess number mida kontrollida
      * @return tekst mida näidatakse kasutajale
@@ -55,6 +70,10 @@ public class Model {
         if(guess == pc_number) {
             game_over = true;
             return "Sa võitsid " + steps + " sammuga!";
+        } else if (guess == 1000) {
+            game_over = true;
+            cheater = true;
+            return "Leidsid mu nõrga koha. Õige number oli " + pc_number;
         } else if (guess < pc_number) {
             return "Liiga väike!";
         } else {
@@ -66,13 +85,13 @@ public class Model {
      * Salvestab listi sisu (edetabel) uuesti faili (kirjutab üle)
      * @param name mängija nimi
      */
-    public void saveScore(String name) {
+    public void saveScore(String name, long time) {
         loadScores(); //Enne laed andmed alla eelnevad
-        scoreboard.add(new Content(name, steps)); // Lisa nimi ja sammude arv listi
+        scoreboard.add(new Content(name, steps, datetime, time)); // Lisa nimi ja sammude arv listi
         Collections.sort(scoreboard); // Sorteerib listi (Content compareTo() omaga)
         try (PrintWriter out = new PrintWriter(new FileWriter(filename))) {
             for(Content c : scoreboard) {
-                out.println(c.getName() + ";" + c.getSteps()); //Semikoolin jutumärkides! //Kirjutab faili nimi;sammud
+                out.println(c.getName() + ";" + c.getSteps() + ";" + c.getDateTime() + ";" + c.getTime()); //Semikoolin jutumärkides! //Kirjutab faili nimi;sammud
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -91,10 +110,12 @@ public class Model {
         try(Scanner sc = new Scanner(file)) {
             while(sc.hasNextLine()) { // Kui failis on järgmine rida
                 String[] parts = sc.nextLine().split(";"); // Semikoolonist tükeldama
-                if(parts.length == 2) {
+                if(parts.length == 4) {
                     String name = parts[0];
                     int steps = Integer.parseInt(parts[1]);
-                    scoreboard.add(new Content(name, steps));
+                    String datetime = parts[2];
+                    long time = Long.parseLong(parts[3]);
+                    scoreboard.add(new Content(name, steps, datetime, time));
                 }
 
             }
