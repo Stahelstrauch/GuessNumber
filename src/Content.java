@@ -8,13 +8,15 @@ public class Content implements Comparable<Content> {
 
     private final String name; // Mängija nimi
     private final int steps; // Sammude arv
-    private LocalDateTime datetime; // Mängimise aeg kuupäev ja kell
-    private long time; // Mänguaeg
+    private final LocalDateTime datetime; // Mängimise aeg kuupäev ja kell
+    private final long time; // Mänguaeg
 
     /**
      * Objekti loomise konstruktor
      * @param name mängija nimi
      * @param steps sammude arv
+     * @param datetime mängimise kuupäev ja kellaaeg
+     * @param time mängimise pikkus
      */
     public Content(String name, int steps, LocalDateTime datetime, long time) {
         this.name = name; // this on klassisisene (lilla)
@@ -39,10 +41,18 @@ public class Content implements Comparable<Content> {
         return steps;
     }
 
+    /**
+     * tagastab mängimise aja(pikkuse)
+     * @return mängimise aeg
+     */
     public long getTime() {
         return time;
     }
 
+    /**
+     * tagastab mängimise kellaaja ja kuupäeva
+     * @return kellaaeg ja kuupäev
+     */
     public LocalDateTime getDateTime() {
         return datetime;
     }
@@ -59,10 +69,10 @@ public class Content implements Comparable<Content> {
         if (compareSteps != 0) {
             return compareSteps;
         } else {
-            if (name.equals(o.name)) {
-                return datetime.compareTo(o.datetime);
+            if (name.equals(o.name)) { //Kui nimed on samad, siis võrdleb mängimise aeg
+                return datetime.compareTo(o.datetime); //Võtab aluseks mängimise aja
             } else {
-                return compareSteps;
+                return compareSteps; // Muul juhul võtab aluseks sammud
             }
         }
     }
@@ -72,7 +82,7 @@ public class Content implements Comparable<Content> {
      * @return vormindatud rida
      */
     public String formattedData() {
-        DateTimeFormatter displayFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
+        DateTimeFormatter displayFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"); //Millisel kujul aega näidata 22.05.2025 10:13:45
         String formattedDatetime = datetime.format(displayFormatter);
         String displayName = name.length() > 15 ? name.substring(0, 15) : String.format("%-15s", name); // Kontrollitakse kas nime pikkus 15, võetakse esimesed 15 märki. Muuljuhul vormistatakse kohe ärta
         String n = String.format("%-15s", displayName); // %- kummale poole pannakse tühikuid
