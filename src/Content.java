@@ -72,7 +72,7 @@ public class Content implements Comparable<Content> {
             if (name.equals(o.name)) { //Kui nimed on samad, siis võrdleb mängimise aeg
                 return datetime.compareTo(o.datetime); //Võtab aluseks mängimise aja
             } else {
-                return compareSteps; // Muul juhul võtab aluseks sammud
+                return 0; // Muul juhul võtab aluseks sammud
             }
         }
     }

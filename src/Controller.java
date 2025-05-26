@@ -34,7 +34,7 @@ public class Controller {
                     Stopwatch stopwatch = new Stopwatch(); // Loome stopperi
                     stopwatch.start(); //Käivitame stopperi
                     while(!model.isGame_over()) { // Kui mäng pole läbi
-                        System.out.println(model.getPc_number()); // TEST et näha pc numbrit
+                        //System.out.println(model.getPc_number()); // TEST et näha pc numbrit
                         int guess = view.askGuess(); // Küsi kasutajalt numbrit
                         view.showMessage(model.checkGuess(guess)); // Kõigepealt tehakse sulgudes olev kontroll ja siis väljastab tulemuse
                     }
