@@ -16,7 +16,6 @@ public class Model {
     private int pc_number; // arvuti võetud number
     private int steps; // Käikude lugeja
     private boolean game_over; // Kas mäng on läbi (yes or no)
-    public String datetime; // Mänguaeg
     private boolean cheater; // Kas mängija on petis jah või ei
 
 
@@ -85,13 +84,13 @@ public class Model {
      * Salvestab listi sisu (edetabel) uuesti faili (kirjutab üle)
      * @param name mängija nimi
      */
-    public void saveScore(String name, long time) {
+    public void saveScore(String name, long time, LocalDateTime datetime) {
         loadScores(); //Enne laed andmed alla eelnevad
         scoreboard.add(new Content(name, steps, datetime, time)); // Lisa nimi ja sammude arv listi
         Collections.sort(scoreboard); // Sorteerib listi (Content compareTo() omaga)
         try (PrintWriter out = new PrintWriter(new FileWriter(filename))) {
             for(Content c : scoreboard) {
-                out.println(c.getName() + ";" + c.getSteps() + ";" + c.getDateTime() + ";" + c.getTime()); //Semikoolin jutumärkides! //Kirjutab faili nimi;sammud
+                out.println(c.getName() + ";" + c.getSteps() + ";" + c.getDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + ";" + c.getTime());//Semikoolin jutumärkides! //Kirjutab faili nimi;sammud
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -113,7 +112,8 @@ public class Model {
                 if(parts.length == 4) {
                     String name = parts[0];
                     int steps = Integer.parseInt(parts[1]);
-                    String datetime = parts[2];
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    LocalDateTime datetime = LocalDateTime.parse(parts[2], formatter);
                     long time = Long.parseLong(parts[3]);
                     scoreboard.add(new Content(name, steps, datetime, time));
                 }

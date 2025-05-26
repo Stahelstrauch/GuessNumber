@@ -8,7 +8,7 @@ public class Content implements Comparable<Content> {
 
     private final String name; // Mängija nimi
     private final int steps; // Sammude arv
-    private String datetime; // Mängimise aeg
+    private LocalDateTime datetime; // Mängimise aeg kuupäev ja kell
     private long time; // Mänguaeg
 
     /**
@@ -16,13 +16,11 @@ public class Content implements Comparable<Content> {
      * @param name mängija nimi
      * @param steps sammude arv
      */
-    public Content(String name, int steps, String datetime, long time) {
+    public Content(String name, int steps, LocalDateTime datetime, long time) {
         this.name = name; // this on klassisisene (lilla)
         this.steps = steps;
         this.datetime = datetime;
         this.time = time;
-        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        //this.datetime = datetime; // Kuupäeva salvestamine
     }
 
     /**
@@ -45,7 +43,7 @@ public class Content implements Comparable<Content> {
         return time;
     }
 
-    public String getDatetime() {
+    public LocalDateTime getDateTime() {
         return datetime;
     }
 
@@ -61,9 +59,8 @@ public class Content implements Comparable<Content> {
         if (compareSteps != 0) {
             return compareSteps;
         } else {
-            if (name == o.name) {
-                int compareDatetime = datetime.compareTo(o.datetime);
-                return compareDatetime;
+            if (name.equals(o.name)) {
+                return datetime.compareTo(o.datetime);
             } else {
                 return compareSteps;
             }
@@ -75,10 +72,12 @@ public class Content implements Comparable<Content> {
      * @return vormindatud rida
      */
     public String formattedData() {
+        DateTimeFormatter displayFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
+        String formattedDatetime = datetime.format(displayFormatter);
         String displayName = name.length() > 15 ? name.substring(0, 15) : String.format("%-15s", name); // Kontrollitakse kas nime pikkus 15, võetakse esimesed 15 märki. Muuljuhul vormistatakse kohe ärta
         String n = String.format("%-15s", displayName); // %- kummale poole pannakse tühikuid
         String s = String.format("%3d", steps); // s on stringi vormistamine, d on täisarv numbri vormistamine
-        return n + s;
+        return formattedDatetime+"   "+ n + s;
 
 
     }

@@ -1,3 +1,5 @@
+import java.time.LocalDateTime;
+
 /**
  * Käivitab mängu
  */
@@ -27,6 +29,7 @@ public class Controller {
                 case 1:
                     // TEST view.showMessage("Valisid mängimise");
                     model.initGame(); // Loo uus mäng
+                    LocalDateTime now = LocalDateTime.now();
                     // õpetaja variant: view.showMessage(String.valueof(model.getPc_number()));
                     Stopwatch stopwatch = new Stopwatch(); // Loome stopperi
                     stopwatch.start(); //Käivitame stopperi
@@ -46,9 +49,9 @@ public class Controller {
                     }else { //muudel juhtudel
                         String name = view.askName(); // Küsi nime
                         long time = stopwatch.getElapsedMillis(); // Stopwatchist millisekundite kätte saamine
-                        model.saveScore(name, time);
+                        model.saveScore(name, time, now);
                         break;
-                }
+                    }
                 case 2:
                     // List<Content> myScores = model.loadScores(); view.showScoreboard(mySCores);  nii saab kahe reaga
                     view.showScoreboard(model.loadScores()); // showScoreboard tahab saada kaasa Listi ja listi saab modelist loadScores tagastab listi

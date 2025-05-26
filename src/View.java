@@ -58,7 +58,7 @@ public class View {
      */
     public void showScoreboard(List<Content> scores) {
         System.out.println("EDETABEL");
-        System.out.println("-----------------------");
+        System.out.println("-----------------------------------------");
         for (Content c : scores) {
             System.out.println(c.formattedData());
         }
